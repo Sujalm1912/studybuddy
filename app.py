@@ -14,7 +14,13 @@ st.caption("Your AI study companion powered by Gemini")
 
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
-    st.error("GEMINI_API_KEY is missing. Please add it to your .env file.")
+    try:
+        api_key = st.secrets.get("GEMINI_API_KEY")
+    except Exception:
+        api_key = None
+
+if not api_key:
+    st.error("GEMINI_API_KEY is missing. Please set it in your Streamlit Cloud Secrets (or .env locally).")
     st.stop()
 
 client = genai.Client(api_key=api_key)
